@@ -1,10 +1,11 @@
-from . import ActiveFiber
-from pyfiberamp.spectroscopies import YbGermanoSilicate
+from pyfiberamp.fibers import ActiveFiber
+from pyfiberamp.spectroscopies import ErGermanoSilicate
+# from pyfiberamp.spectroscopies import *
 
 
-class YbDopedFiber(ActiveFiber):
-    """YbDopedFiber is a convenience class for Yb-doped single-mode fiber that uses the default spectroscopic data
-     for Yb-ions."""
+class ErDopedFiber(ActiveFiber):
+    """ErDopedFiber is a convenience class for Er-doped single-mode fiber that uses the default spectroscopic data
+     for Er-ions.(according to optisystem7 evaluate data)"""
     def __init__(self, length=0, core_radius=0, ion_number_density=0, background_loss=0, core_na=0):
         """
 
@@ -25,5 +26,9 @@ class YbDopedFiber(ActiveFiber):
                          background_loss=background_loss,
                          core_na=core_na,
                          ion_number_density=ion_number_density,
-                         spectroscopy=YbGermanoSilicate)
+                         spectroscopy=ErGermanoSilicate)
+
+
+if __name__ == "__main__":
+    fiber = ErDopedFiber()
 

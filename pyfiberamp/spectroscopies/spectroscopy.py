@@ -53,4 +53,6 @@ class Spectroscopy:
         plt.show()
 
 
-YbGermanoSilicate= Spectroscopy.from_files(YB_ABSORPTION_CS_FILE, YB_EMISSION_CS_FILE, YB_UPPER_STATE_LIFETIME)
+YbGermanoSilicate = Spectroscopy.from_files(YB_ABSORPTION_CS_FILE, YB_EMISSION_CS_FILE, YB_UPPER_STATE_LIFETIME)
+ErGermanoSilicate = Spectroscopy.from_files(ER_ABSORPTION_CS_FILE, ER_EMISSION_CS_FILE, ER_UPPER_STATE_LIFETIME)
+# ErGermanoSilicate = Spectroscopy.from_files(YB_ABSORPTION_CS_FILE, YB_EMISSION_CS_FILE, YB_UPPER_STATE_LIFETIME)

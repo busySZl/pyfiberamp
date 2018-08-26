@@ -1,2 +1,2 @@
-from .spectroscopy import Spectroscopy, YbGermanoSilicate
+from .spectroscopy import Spectroscopy, YbGermanoSilicate, ErGermanoSilicate
 

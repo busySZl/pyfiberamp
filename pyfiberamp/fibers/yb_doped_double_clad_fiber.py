@@ -1,6 +1,7 @@
 from .double_clad_fiber import DoubleCladFiber
 from pyfiberamp.spectroscopies import YbGermanoSilicate
 
+
 class YbDopedDoubleCladFiber(DoubleCladFiber):
     """YbDopedDoubleCladFiber is a convenience class for Yb-doped double-clad fiber that uses the default spectroscopic
      data for Yb-ions."""

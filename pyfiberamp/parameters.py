@@ -10,6 +10,7 @@ REP_RATE_LOWER_LIMIT = 1e4  # Hz
 NUMBER_OF_MODES_IN_SINGLE_MODE_FIBER = 2  # Two polarization modes
 RAMAN_MODES_IN_PM_FIBER = 1
 YB_UPPER_STATE_LIFETIME = 1e-3  # s
+ER_UPPER_STATE_LIFETIME = 1e-3  # s /notes: according to optisystem7
 c = 299792458
 h = 6.62607e-34
 DEFAULT_GROUP_INDEX = 1.45
@@ -30,6 +31,9 @@ this_folder = os.path.dirname(os.path.realpath(__file__))
 spectrum_folder = os.path.join(this_folder, 'spectroscopies', 'fiber_spectra')
 YB_ABSORPTION_CS_FILE = os.path.join(spectrum_folder, 'ytterbium absorption cross sections.dat')
 YB_EMISSION_CS_FILE = os.path.join(spectrum_folder, 'ytterbium emission cross sections.dat')
+
+ER_ABSORPTION_CS_FILE = os.path.join(spectrum_folder, 'erbium_absorption_cross_sections.dat')
+ER_EMISSION_CS_FILE = os.path.join(spectrum_folder, 'erbium_emission_cross_sections.dat')
 
 CHANNEL_TYPES = ['forward_signal', 'backward_signal',
                 'forward_pump', 'backward_pump',
