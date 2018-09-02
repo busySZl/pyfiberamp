@@ -61,6 +61,7 @@ class Channels:
 
     def _init_forward_signal(self, wl, wl_bandwidth, power, mode_shape_parameters, label,
                              reflection_target_label="", reflection_coeff=0):
+        print("!!! add_cw_signal")
         channel = OpticalChannel.create_signal_channel(self.fiber, wl, wl_bandwidth, power, mode_shape_parameters,
                                                        direction=1, label=label,
                                                        reflection_target_label=reflection_target_label,
@@ -99,6 +100,7 @@ class Channels:
 
     def _init_forward_pump(self, wl, wl_bandwidth, power, mode_shape_parameters, label,
                             reflection_target_label="", reflection_coeff=0):
+        print("!!! add_pump")
         channel = OpticalChannel.create_pump_channel(self.fiber, wl, wl_bandwidth, power, mode_shape_parameters,
                                                      direction=1, label=label,
                                                      reflection_target_label=reflection_target_label,

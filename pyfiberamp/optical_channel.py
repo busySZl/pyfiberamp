@@ -75,6 +75,8 @@ class OpticalChannel:
     @staticmethod
     def get_overlaps_and_mode_func(fiber, wl, mode_shape_parameters):
         mode_func = None
+        print(">>> mode_shape_param: {}".format(mode_shape_parameters))
+
         # Case 1: overlaps predefined
         n_preset_overlaps = len(mode_shape_parameters['overlaps'])
         if n_preset_overlaps > 0:
@@ -83,11 +85,13 @@ class OpticalChannel:
 
         # No overlaps defined -> fiber must specify doping profile radii for overlap calculation
         doping_radii = fiber.doping_profile.radii
+        print(">>doping radii: {}".format(doping_radii))
         assert len(doping_radii) > 0
 
         # Case 2: Mode shape and overlaps must be calculated
         mode_shape = ModeShape(fiber, wl, mode_shape_parameters)
         overlaps = mode_shape.get_ring_overlaps(doping_radii)
+        print("overlaps: {}".format(overlaps))
         mode_func = mode_shape.mode_func
         return overlaps, mode_func
 
