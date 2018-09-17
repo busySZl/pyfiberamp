@@ -80,4 +80,7 @@ class ActiveFiber(FiberBase):
         if frequency_bandwidth == 0:
             return self.spectroscopy.absorption_cs_interp(freq)
         else:
-            return averaged_value_of_finite_bandwidth_spectrum(freq, frequency_bandwidth, self.spectroscopy.absorption_cs_interp)
+            return averaged_value_of_finite_bandwidth_spectrum(
+                freq, frequency_bandwidth,
+                self.spectroscopy.absorption_cs_interp
+            )

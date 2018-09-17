@@ -62,8 +62,12 @@ class OpticalChannel:
         overlaps, mode_func = cls.get_overlaps_and_mode_func(fiber, wl, mode_shape_parameters)
         center_frequency = wl_to_freq(wl)
         frequency_bandwidth = wl_bw_to_freq_bw(wl_bandwidth, wl)
-        gain = overlaps * fiber.get_channel_emission_cross_section(center_frequency, frequency_bandwidth) * fiber.doping_profile.ion_number_densities
-        absorption = overlaps * fiber.get_channel_absorption_cross_section(center_frequency, frequency_bandwidth) * fiber.doping_profile.ion_number_densities
+        gain = overlaps * fiber.get_channel_emission_cross_section(center_frequency, frequency_bandwidth) * \
+               fiber.doping_profile.ion_number_densities
+        print("overlap: {}".format(overlaps))
+        print("fiber.doping_profile.ion_number_densities: {}".format(fiber.doping_profile.ion_number_densities))
+        absorption = overlaps * fiber.get_channel_absorption_cross_section(center_frequency, frequency_bandwidth) * \
+                     fiber.doping_profile.ion_number_densities
         center_frequency = np.full(n_ion_populations, center_frequency)
         frequency_bandwidth = np.full(n_ion_populations, frequency_bandwidth)
         loss = np.full(n_ion_populations, fiber.background_loss)

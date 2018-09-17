@@ -20,6 +20,11 @@ def load_spectrum(file_name):
     return spectrum
 
 
+def load_spectrum_from_optisystem(file_name):
+    spectrum = load_two_column_file(file_name)
+    return spectrum
+
+
 def load_two_column_file(file_name):
     """Loads a file with two columns of floats as a numpy array."""
     return np.loadtxt(file_name, converters={0: to_float, 1: to_float})

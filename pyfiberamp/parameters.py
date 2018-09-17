@@ -32,6 +32,9 @@ spectrum_folder = os.path.join(this_folder, 'spectroscopies', 'fiber_spectra')
 YB_ABSORPTION_CS_FILE = os.path.join(spectrum_folder, 'ytterbium absorption cross sections.dat')
 YB_EMISSION_CS_FILE = os.path.join(spectrum_folder, 'ytterbium emission cross sections.dat')
 
+YB_ABSORPTION_CS_FILE_FROM_OPTISYSTEM = os.path.join(spectrum_folder, 'yb_absorption_parameters_curve.dat')
+YB_EMISSION_CS_FILE_FROM_OPTISYSTEM = os.path.join(spectrum_folder, 'yb_emission_parameters_curve.dat')
+
 ER_ABSORPTION_CS_FILE = os.path.join(spectrum_folder, 'erbium_absorption_cross_sections.dat')
 ER_EMISSION_CS_FILE = os.path.join(spectrum_folder, 'erbium_emission_cross_sections.dat')
 

@@ -11,6 +11,12 @@ class Spectroscopy:
         gain_spectrum = load_spectrum(emission_cross_section_file)
         return cls(absorption_spectrum, gain_spectrum, upper_state_lifetime)
 
+    @classmethod
+    def from_optisystem_files(cls, absorption_cross_section_file, emission_cross_section_file, upper_state_lifetime):
+        absorption_spectrum = load_spectrum_from_optisystem(absorption_cross_section_file)
+        gain_spectrum = load_spectrum_from_optisystem(emission_cross_section_file)
+        return cls(absorption_spectrum, gain_spectrum, upper_state_lifetime)
+
     def __init__(self, absorption_cross_sections, emission_cross_sections, upper_state_lifetime):
         self.absorption_cs_spectrum = absorption_cross_sections
         self.emission_cs_spectrum = emission_cross_sections
@@ -53,6 +59,10 @@ class Spectroscopy:
         plt.show()
 
 
+YbGermanoSilicateFromOptisystem = Spectroscopy.from_optisystem_files(
+    YB_ABSORPTION_CS_FILE_FROM_OPTISYSTEM,
+    YB_EMISSION_CS_FILE_FROM_OPTISYSTEM,
+    0.8e-3
+)
 YbGermanoSilicate = Spectroscopy.from_files(YB_ABSORPTION_CS_FILE, YB_EMISSION_CS_FILE, YB_UPPER_STATE_LIFETIME)
 ErGermanoSilicate = Spectroscopy.from_files(ER_ABSORPTION_CS_FILE, ER_EMISSION_CS_FILE, ER_UPPER_STATE_LIFETIME)
-# ErGermanoSilicate = Spectroscopy.from_files(YB_ABSORPTION_CS_FILE, YB_EMISSION_CS_FILE, YB_UPPER_STATE_LIFETIME)

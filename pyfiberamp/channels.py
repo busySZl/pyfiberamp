@@ -70,7 +70,7 @@ class Channels:
         self.forward_signals.append(channel)
 
     def _init_pulsed_forward_signal(self, wl, wl_bandwidth, power, f_rep, fwhm_duration, mode_shape_parameters, label,
-                             reflection_target_label="", reflection_coeff=0):
+                                    reflection_target_label="", reflection_coeff=0):
         channel = OpticalChannel.create_signal_channel(self.fiber, wl, wl_bandwidth, power, mode_shape_parameters,
                                                        direction=1, label=label,
                                                        reflection_target_label=reflection_target_label,
@@ -81,7 +81,7 @@ class Channels:
         self.forward_signals.append(channel)
 
     def _init_backward_signal(self, wl, wl_bandwidth, power, mode_shape_parameters, label,
-                             reflection_target_label="", reflection_coeff=0):
+                              reflection_target_label="", reflection_coeff=0):
         channel = OpticalChannel.create_signal_channel(self.fiber, wl, wl_bandwidth, power, mode_shape_parameters,
                                                        direction=-1, label=label,
                                                        reflection_target_label=reflection_target_label,
@@ -90,7 +90,7 @@ class Channels:
         self.backward_signals.append(channel)
 
     def _init_backward_pump(self, wl, wl_bandwidth, power, mode_shape_parameters, label,
-                                  reflection_target_label="", reflection_coeff=0):
+                            reflection_target_label="", reflection_coeff=0):
         channel = OpticalChannel.create_pump_channel(self.fiber, wl, wl_bandwidth, power, mode_shape_parameters,
                                                      direction=-1, label=label,
                                                      reflection_target_label=reflection_target_label,
@@ -99,7 +99,7 @@ class Channels:
         self.backward_pumps.append(channel)
 
     def _init_forward_pump(self, wl, wl_bandwidth, power, mode_shape_parameters, label,
-                            reflection_target_label="", reflection_coeff=0):
+                           reflection_target_label="", reflection_coeff=0):
         print("!!! add_pump")
         channel = OpticalChannel.create_pump_channel(self.fiber, wl, wl_bandwidth, power, mode_shape_parameters,
                                                      direction=1, label=label,
@@ -175,9 +175,9 @@ class Channels:
 
     def get_labels(self):
         all_labels = np.array(np.hstack([ch.label for ch in self._all_channels()]))
-        valid_labels = all_labels[all_labels!='']
+        valid_labels = all_labels[all_labels != '']
         _, counts = np.unique(valid_labels, return_counts=True)
-        assert np.all(counts==1), 'Multiple channels have the same label!'
+        assert np.all(counts == 1), 'Multiple channels have the same label!'
         return all_labels
 
     def get_reflections(self):

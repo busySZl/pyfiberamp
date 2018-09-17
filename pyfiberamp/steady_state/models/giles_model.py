@@ -21,6 +21,7 @@ class GilesModel:
     def make_rate_equation_rhs(self):
         # First, we precalculate all the constants
         zeta = self.fiber.saturation_parameter()
+        print(">>zeta: {}".format(zeta))
         h_v_zeta = h * self.v * zeta
         h_v_dv = h * self.v * self.dv
         g_m_h_v_dv = self.g * self.m * h_v_dv   # m =2
