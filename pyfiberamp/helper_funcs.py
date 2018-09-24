@@ -82,7 +82,6 @@ def to_dbm(power):
 
 def fundamental_mode_mfd_marcuse(wl, r, na):
     """Calculates the mode field diameter of the fundamental mode with vacuum wavelength wl using Marcuse's equation.
-
     :param wl: Wavelength of the mode
     :type wl: float
     :param r: Core radius

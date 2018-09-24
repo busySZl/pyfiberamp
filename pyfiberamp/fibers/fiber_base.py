@@ -62,6 +62,7 @@ class FiberBase(ABC):
 
     def _effective_area_from_core_area(self, freq):
         """Returns a numpy array with len(freq) items. All items are equal to the fiber's core area."""
+        print("core_area: {}".format(self.core_area() * np.ones_like(freq)))
         return self.core_area() * np.ones_like(freq)
 
     def _effective_area_from_mode_shape(self, freq):
@@ -71,7 +72,7 @@ class FiberBase(ABC):
         mode_shape = ModeShape(self, freq_to_wl(freq), {'functional_form': self.effective_area_type,
                                                         'mode_diameter': 0})
         a_eff = mode_shape.nonlinear_effective_area(self.core_radius)
-        print(a_eff)
+        print("a_eff: {}".format(a_eff))
         return a_eff
 
     def _effective_area_from_bessel_distribution(self, freq):

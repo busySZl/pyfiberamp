@@ -16,14 +16,17 @@ class ModeShape:
         assert radius >= 0
 
         self.mode_func = None
+        print("function_form: {} / radius: {}".format(functional_form, radius))
         if functional_form == 'bessel':
             if radius > 0:
                 warnings.warn('Bessel mode cannot use predefined mode diameter.')
             self.mode_func = self.solve_fundamental_bessel_mode(fiber, wavelength)
         elif functional_form == 'gaussian':
             if radius == 0:
+                print("solve_fundamental_gaussian_mode!!")
                 self.mode_func = self.solve_fundamental_gaussian_mode(fiber, wavelength)
             else:
+                print("!!radius: {}".format(radius))
                 self.mode_func = self.make_normalized_gaussian_mode(radius)
         elif functional_form == 'tophat':
             if radius == 0:
@@ -53,6 +56,7 @@ class ModeShape:
 
     def get_ring_overlaps(self, radii):
         radii_with_zero = np.hstack((0, radii))
+        print("radii_with_zero: {}".format(radii_with_zero))
         start_radii = radii_with_zero[:-1]
         end_radii = radii_with_zero[1:]
         overlaps = np.zeros(len(radii))

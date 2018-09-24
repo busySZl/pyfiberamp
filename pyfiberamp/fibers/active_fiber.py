@@ -77,6 +77,7 @@ class ActiveFiber(FiberBase):
             return averaged_value_of_finite_bandwidth_spectrum(freq, frequency_bandwidth, self.spectroscopy.gain_cs_interp)
 
     def get_channel_absorption_cross_section(self, freq, frequency_bandwidth):
+        print("freq / freq_w: {} ,{}".format(freq, frequency_bandwidth))
         if frequency_bandwidth == 0:
             return self.spectroscopy.absorption_cs_interp(freq)
         else:

@@ -39,7 +39,7 @@ background_loss = 0
 dc_fiber = YbDopedFiber(
     length=5,
     core_radius=3.4e-6,
-    core_na=0.2,
+    core_na=0.24,
     ion_number_density=1e25,
     background_loss=0
 )
@@ -55,9 +55,10 @@ dc_fiber.default_signal_mode_shape_parameters['functional_form'] = 'gaussian'
 # Create the simulation and add signal and pump channels
 simulation = SteadyStateSimulation()
 simulation.fiber = dc_fiber
+# print("!!! add_cw_signal")
 simulation.add_cw_signal(wl=1064e-9, power=1, mode_shape_parameters={'mode_diameter': 9.6e-6})
+# print("!!! add_pump")
 simulation.add_backward_pump(wl=915e-9, power=20)
-print("!!! add_pump")
 # simulation.add_forward_pump(wl=914e-9, power=20)
 # simulation.add_cw_signal(wl=1550e-9, power=1e-5, mode_shape_parameters={'mode_diameter': 5e-6})
 # simulation.add_backward_pump(wl=980e-9, power=0.1)

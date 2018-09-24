@@ -28,7 +28,8 @@ class OpticalChannel:
     @classmethod
     def create_signal_channel(cls, fiber, wl, wl_bandwidth, power, mode_shape_parameters, direction, label,
                               reflection_target_label, reflectance, channel_type=''):
-
+        print(">>create_signal_channel.mode_shape_parameters: {}".format(mode_shape_parameters))
+        print(">>fiber.default_signal_mode_shape_parameters: {}".format(fiber.default_signal_mode_shape_parameters))
         mode_shape_parameters = cls.fill_mode_shape_parameters(mode_shape_parameters,
                                                                fiber.default_signal_mode_shape_parameters)
 
@@ -89,8 +90,10 @@ class OpticalChannel:
 
         # No overlaps defined -> fiber must specify doping profile radii for overlap calculation
         doping_radii = fiber.doping_profile.radii
-        print(">>doping radii: {}".format(doping_radii))
         assert len(doping_radii) > 0
+
+        print(">> doping_radi: {}".format(doping_radii))
+        print(">>>> fiber: {}".format(fiber))
 
         # Case 2: Mode shape and overlaps must be calculated
         mode_shape = ModeShape(fiber, wl, mode_shape_parameters)

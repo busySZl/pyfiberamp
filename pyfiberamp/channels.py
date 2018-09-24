@@ -6,6 +6,7 @@ from .helper_funcs import *
 from pyfiberamp.util import DelayedExecutor
 from pyfiberamp.optical_channel import OpticalChannel
 
+
 class Channels:
     def __init__(self):
         self.fiber = None
@@ -91,6 +92,7 @@ class Channels:
 
     def _init_backward_pump(self, wl, wl_bandwidth, power, mode_shape_parameters, label,
                             reflection_target_label="", reflection_coeff=0):
+        print("!!! add_backward_pump")
         channel = OpticalChannel.create_pump_channel(self.fiber, wl, wl_bandwidth, power, mode_shape_parameters,
                                                      direction=-1, label=label,
                                                      reflection_target_label=reflection_target_label,
