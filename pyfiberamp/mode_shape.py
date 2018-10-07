@@ -52,6 +52,8 @@ class ModeShape:
         a = fiber.core_radius
         na_core = fiber.core_na
         mode_radius = fundamental_mode_radius_petermann_2(wavelength, a, na_core)
+        # mode_radius = fundamental_mode_radius_marcuse(wavelength, a, na_core)
+        print(">>>>>> mode_radius/ core_radius / na_core: {0} / {1} / {2}".format(mode_radius, a, na_core))
         return self.make_normalized_gaussian_mode(mode_radius)
 
     def get_ring_overlaps(self, radii):

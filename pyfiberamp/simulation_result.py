@@ -4,18 +4,29 @@ from pyfiberamp.util.sliced_array import SlicedArray
 from pyfiberamp.helper_funcs import *
 from pyfiberamp.fibers import PassiveFiber
 
+import numpy as np
+
+
 class SimulationResult:
     def __init__(self, z, powers, upper_level_fraction, channels, fiber, backward_raman_allowed=True):
         self.z = z
         slices = channels.get_slices()
+        print(" slices: {}".format(slices))
         self.channels = channels
         self.labels = channels.get_labels()
         self.powers = SlicedArray(powers, slices)
+        print(">>>>>max powers: {}".format(np.max(self.powers[0])))
+        print("self.powers.shape: {}".format(self.powers.shape))
+        print("self.powers.__dict__: {}".format(self.powers.__dict__))
         self.wavelengths = channels.get_wavelengths()
+        print("self.wavelengths.__dict__: {}".format(self.wavelengths.__dict__))
+        print("self.wavelengths.forward_signal: {}".format(self.wavelengths.forward_signal))
+        print("self.wavelengths.backward_pump: {}".format(self.wavelengths.backward_pump))
+        print("self.wavelengths.backward_signal: {}".format(self.wavelengths.backward_signal))
         self.upper_level_fraction = upper_level_fraction
         self._backward_raman_allowed = backward_raman_allowed
         self.fiber = fiber
-        self.use_db_scale = False
+        self.use_db_scale = True
 
     @property
     def local_average_excitation(self):
@@ -44,7 +55,7 @@ class SimulationResult:
 
     def powers_at_fiber_end(self):
         forward_slice, backward_slice = self.channels.get_forward_and_backward_slices()
-        return np.hstack((self.powers[forward_slice,-1], self.powers[backward_slice,0]))
+        return np.hstack((self.powers[forward_slice, -1], self.powers[backward_slice, 0]))
 
     def start_and_end_idx_from_channel_type(self, channel_type):
         return (0, -1) if 'forward' in channel_type else (-1, 0)
@@ -217,5 +228,33 @@ class SimulationResult:
         ax.set_ylabel('Radius (um)', fontsize=18)
         ax.set_zlabel('Fractional excitation', fontsize=18)
         plt.show()
+
+    def cal_nf(self):
+        forward_ase = np.sum(self.powers.forward_ase, axis=0)
+        forward_ase_power = forward_ase[-1]
+        forward_signal_powers = getattr(self.powers, 'forward_signal')
+        forward_signal_wls = getattr(self.wavelengths, 'forward_signal')
+        input_forward_signal_power = forward_signal_powers[0, 0]
+        output_forward_signal_power = forward_signal_powers[0, -1]
+        gain = output_forward_signal_power / input_forward_signal_power
+        gain_db = to_db(gain)
+        # print("ase: {} / forward_signal_wl: {}".format(forward_ase_power, forward_signal_wls[0]))
+        # print("ase: {} / forward_signal_power: {} / {} / {}".format(
+        #         forward_ase_power,
+        #         input_forward_signal_power,
+        #         output_forward_signal_power,
+        #         gain
+        #     )
+        # )
+        cal_wl = 1550e-9
+        cal_dwl = 100e-9
+        cal_f = c / cal_wl
+        cal_b = cal_f * cal_dwl / cal_wl
+        NF = 10 * np.log10((1 / gain + forward_ase_power / (h * cal_f * cal_b * gain)))
+        # NF = 10 * np.log10(1 / gain)
+        # print("NF: {}".format(NF))
+        return NF, gain_db
+
+
 
 

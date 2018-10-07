@@ -62,7 +62,7 @@ class Spectroscopy:
 YbGermanoSilicateFromOptisystem = Spectroscopy.from_optisystem_files(
     YB_ABSORPTION_CS_FILE_FROM_OPTISYSTEM,
     YB_EMISSION_CS_FILE_FROM_OPTISYSTEM,
-    0.8e-3
+    YB_UPPER_STATE_LIFETIME
 )
 YbGermanoSilicate = Spectroscopy.from_files(YB_ABSORPTION_CS_FILE, YB_EMISSION_CS_FILE, YB_UPPER_STATE_LIFETIME)
 ErGermanoSilicate = Spectroscopy.from_files(ER_ABSORPTION_CS_FILE, ER_EMISSION_CS_FILE, ER_UPPER_STATE_LIFETIME)

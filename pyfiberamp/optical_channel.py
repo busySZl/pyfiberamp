@@ -41,8 +41,13 @@ class OpticalChannel:
     def create_pump_channel(cls, fiber, wl, wl_bandwidth, power, mode_shape_parameters, direction, label,
                             reflection_target_label, reflectance, channel_type=''):
 
+        print(">>create_pump_channel.mode_shape_parameters: {}".format(mode_shape_parameters))
+        print(">>fiber.default_pump_mode_shape_parameters: {}".format(fiber.default_pump_mode_shape_parameters))
+
         mode_shape_parameters = cls.fill_mode_shape_parameters(mode_shape_parameters,
                                                                fiber.default_pump_mode_shape_parameters)
+
+        print(">>pump mode_shape_parameters: {}".format(mode_shape_parameters))
 
         return cls._create_channel(fiber, wl, wl_bandwidth, power, mode_shape_parameters,
                                    direction, label, reflection_target_label, reflectance,

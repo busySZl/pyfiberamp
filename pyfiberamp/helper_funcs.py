@@ -95,6 +95,21 @@ def fundamental_mode_mfd_marcuse(wl, r, na):
     return 2 * r * (0.65 + 1.619*v**(-3/2) + 2.879*v**(-6))
 
 
+def fundamental_mode_radius_marcuse(wl, r, na):
+    """Calculates the fundamental mode radius with vacuum wavelength wl using the Petermann II equation.
+
+    :param wl: Wavelength of the mode
+    :type wl: float
+    :param r: Core radius
+    :type r: float
+    :param na: Core numerical aperture
+    :type na: float
+    :returns: Mode field radius of the fundamental mode
+    :rtype: float
+    """
+    return fundamental_mode_mfd_marcuse(wl, r, na) / 2
+
+
 def fundamental_mode_mfd_petermann_2(wl, r, na):
     """Calculates the mode field diameter of the fundamental mode with vacuum wavelength wl using the Petermann II
     equation.

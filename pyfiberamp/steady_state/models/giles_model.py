@@ -25,7 +25,7 @@ class GilesModel:
         h_v_zeta = h * self.v * zeta
         h_v_dv = h * self.v * self.dv
         g_m_h_v_dv = self.g * self.m * h_v_dv   # m =2
-        print(">>g:{}".format(self.g))
+        # print(">>g:{}".format(self.g))
         a_g = self.a + self.g
         a_per_h_v_zeta = self.a / h_v_zeta
         a_g_per_h_v_zeta = a_g / h_v_zeta

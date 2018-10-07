@@ -20,17 +20,17 @@ class YbDopedFiber(ActiveFiber):
         :type core_na: float
 
         """
-        # super().__init__(length=length,
-        #                  core_radius=core_radius,
-        #                  background_loss=background_loss,
-        #                  core_na=core_na,
-        #                  ion_number_density=ion_number_density,
-        #                  spectroscopy=YbGermanoSilicate)
         super().__init__(length=length,
                          core_radius=core_radius,
                          background_loss=background_loss,
                          core_na=core_na,
                          ion_number_density=ion_number_density,
-                         spectroscopy=YbGermanoSilicateFromOptisystem)
+                         spectroscopy=YbGermanoSilicate)
+        # super().__init__(length=length,
+        #                  core_radius=core_radius,
+        #                  background_loss=background_loss,
+        #                  core_na=core_na,
+        #                  ion_number_density=ion_number_density,
+        #                  spectroscopy=YbGermanoSilicateFromOptisystem)
 
 
