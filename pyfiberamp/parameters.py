@@ -14,6 +14,9 @@ ER_UPPER_STATE_LIFETIME = 10e-3  # s /notes: according to optisystem7
 c = 299792458
 h = 6.62607e-34
 DEFAULT_GROUP_INDEX = 1.45
+q = 1.6e-19
+T0 = 273.15
+K = 1.38e-23
 
 # Constants for the numerical algorithm
 SIMULATION_MIN_POWER = 1e-14
