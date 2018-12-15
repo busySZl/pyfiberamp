@@ -14,6 +14,8 @@ class ExternalModulationSystem(object):
         mzm_v_pi_dc,
         mzm_v_pi_rf_list,
         optical_loss_coeff,
+        mzm_rf_loss,
+        pd_output_rf_loss,
         pd_responsivity,
         laser_optical_power_out,
         laser_RIN,
@@ -36,11 +38,13 @@ class ExternalModulationSystem(object):
             V_pi_dc=mzm_v_pi_dc,
             V_pi_rf_list=mzm_v_pi_rf_list,
             optical_loss_coeff=optical_loss_coeff,
-            R_internal=modulator_R_internal
+            R_internal=modulator_R_internal,
+            rf_loss=mzm_rf_loss
         )
         self.photonic_detector = PhotonicDetector(
             responsivity=pd_responsivity,
-            R_internal=pd_R_internal
+            R_internal=pd_R_internal,
+            output_rf_loss=pd_output_rf_loss
         )
         self.R_input = R_input
         self.R_load = R_load
@@ -67,7 +71,7 @@ class ExternalModulationSystem(object):
             self.edfa_fiber.default_pump_mode_shape_parameters['functional_form'] = 'gaussian'
             self.edfa_sim_points = edfa_npoints
 
-    def get_output_info_dict(self, V_dc_bias, Power_rf_input):
+    def get_output_info_dict(self, V_dc_bias, Power_rf_input, edfa_forward_pump_power=0.):
         """
 
         :param V_dc_bias:   V
@@ -75,8 +79,9 @@ class ExternalModulationSystem(object):
         :return:
         """
         system_output_info_dict = {}
-
-        P_rf_mzm = Power_rf_input * self.R_input / (self.R_input + self.modulator_R_internal)
+        P_rf_mzm = Power_rf_input * pow(10, - self.modulator.rf_loss / 10.)
+        P_rf_mzm = P_rf_mzm * self.R_input / (self.R_input + self.modulator_R_internal)
+        # P_rf_mzm = Power_rf_input
         optical_power_array = self.modulator.optical_power_output(
             optical_power_input=self.laser_optical_power_out,
             V_dc_bias=V_dc_bias,
@@ -92,7 +97,7 @@ class ExternalModulationSystem(object):
                 simulation = SteadyStateSimulation()
                 simulation.fiber = self.edfa_fiber
                 simulation.add_cw_signal(wl=1550e-9, power=edfa_input_power)
-                simulation.add_forward_pump(wl=980e-9, power=0.1)
+                simulation.add_forward_pump(wl=980e-9, power=edfa_forward_pump_power)
                 simulation.add_ase(wl_start=1500e-9, wl_end=1600e-9, n_bins=100)
                 simulation.set_number_of_nodes(self.edfa_sim_points)
                 result = simulation.run(tol=1e-4)
@@ -110,25 +115,28 @@ class ExternalModulationSystem(object):
         current_output_array = self.photonic_detector.current_output(
             optical_power_input=optical_power_array
         )
+
         if not self.edfa_enable:
             photonic_current = current_output_array / 2.0   # impedance matching on the spectrum analyzer
             P_rf_ouput = pow(photonic_current, 2) * self.R_load * np.array([1, 0.5, 0.5, 0.5])
+            P_rf_ouput[:, 1] = P_rf_ouput[:, 1] * pow(10, - self.photonic_detector.output_rf_loss / 10.)
             P_rf_ouput_db = 10 * np.log10(P_rf_ouput)
 
             print("p_rf: {} dbm".format(to_db(P_rf_ouput[:, 1] * 1000)))
             print("Power_rf_input: {} dbm".format(to_db(Power_rf_input * 1000)))
 
-            rf_gain = P_rf_ouput[:, 1] / Power_rf_input
+            rf_gain = P_rf_ouput[:, 1] / Power_rf_input * 2
             # rf_gain = P_rf_ouput[:, 1] / P_rf_mzm
             rf_gain_db = 10 * np.log10(rf_gain)
 
             N_th_no_B = K * self.T
-            N_shot_no_B = 2 * q * photonic_current[:, 0] * self.R_load
+            N_shot_no_B = 2 * q * photonic_current[:, 0] * self.R_load * pow(10, - self.photonic_detector.output_rf_loss / 10.)
             RIN = pow(10, self.RIN / 10.)
-            N_rin_no_B = pow(photonic_current[:, 0], 2) * RIN * self.R_load
+            N_rin_no_B = pow(photonic_current[:, 0], 2) * RIN * self.R_load * pow(10, - self.photonic_detector.output_rf_loss / 10.)
+            # N_rin_no_B = (pow(photonic_current[:, 0], 2) * RIN - 2 * q * photonic_current[:, 0]) * self.R_load
 
             # get thermal noise gain
-            N_out_no_B = rf_gain * N_th_no_B + N_th_no_B + N_shot_no_B + N_rin_no_B
+            N_out_no_B = 2 * rf_gain * N_th_no_B + N_th_no_B + N_shot_no_B + N_rin_no_B
         else:
             photonic_current = current_output_array / 2.0  # impedance matching on the spectrum analyzer
             P_rf_ouput = pow(photonic_current, 2) * self.R_load * np.array([1, 0.5, 0.5, 0.5, 1])
@@ -143,7 +151,7 @@ class ExternalModulationSystem(object):
             N_rin_no_B = pow(photonic_current[:, 0], 2) * RIN * self.R_load
             N_ase_no_B = pow(photonic_current[:, -1], 2) * self.R_load
 
-            N_out_no_B = rf_gain * N_th_no_B + N_th_no_B + N_shot_no_B + N_rin_no_B + N_ase_no_B
+            N_out_no_B = 2 * rf_gain * N_th_no_B + N_th_no_B + N_shot_no_B + N_rin_no_B + N_ase_no_B
 
         NF_db = 10 * np.log10(N_out_no_B / (N_th_no_B * rf_gain))
 
@@ -160,12 +168,14 @@ class MachZehnderModulator(object):
         V_pi_dc,
         V_pi_rf_list,
         optical_loss_coeff,
+        rf_loss=0.,
         R_internal=50
     ):
         self.v_pi_dc = V_pi_dc
         self.v_pi_rf_list = V_pi_rf_list
         self.optical_loss_coeff = optical_loss_coeff
         self.r_internal = R_internal
+        self.rf_loss = rf_loss
 
     def optical_power_output(self, optical_power_input, V_dc_bias, P_rf_mzm):
         """
@@ -211,15 +221,17 @@ class PhotonicDetector(object):
         self,
         responsivity,
         R_internal=50,
+        output_rf_loss=0.
     ):
         """
 
         :param responsivity:    A / W
         :param R_internal:      Omega
-        :param R_load:          Omega
+        :param output_rf_loss:  dB
         """
         self.responsivity = responsivity
         self.r_internal = R_internal
+        self.output_rf_loss = output_rf_loss
 
     def current_output(self, optical_power_input):
         """
@@ -239,8 +251,10 @@ def test_example():
     # 1 - 3 GHz
     ems = ExternalModulationSystem(
         mzm_v_pi_dc=2.5959,
-        mzm_v_pi_rf_list=[1.6533,    1.5871,    1.6629],
-        optical_loss_coeff=pow(10, -0.6),
+        mzm_v_pi_rf_list=[1.6533,    1.5871,    1.6629],        # [1.6533,    1.5871,    1.6629]
+        optical_loss_coeff=pow(10, -0.684),
+        mzm_rf_loss=0.0,
+        pd_output_rf_loss=0.0,
         pd_responsivity=0.9,
         laser_optical_power_out=0.08,
         laser_RIN=-160,
@@ -255,7 +269,7 @@ def test_example():
     )
     res_info_dict = ems.get_output_info_dict(
         V_dc_bias=1.29795,
-        Power_rf_input=0.001
+        Power_rf_input=0.001,
     )
     print("ems: {}".format(res_info_dict))
 
@@ -265,7 +279,8 @@ def edfa_example():
     ems = ExternalModulationSystem(
         mzm_v_pi_dc=2.5959,
         mzm_v_pi_rf_list=[1.6533, 1.5871, 1.6629],
-        optical_loss_coeff=pow(10, -0.6),
+        optical_loss_coeff=pow(10, -0.5),
+        mzm_rf_loss=2.,
         pd_responsivity=0.9,
         laser_optical_power_out=0.08,
         laser_RIN=-160,
@@ -280,7 +295,8 @@ def edfa_example():
     )
     res_info_dict = ems.get_output_info_dict(
         V_dc_bias=1.29795,
-        Power_rf_input=0.000001
+        Power_rf_input=0.000001,
+        edfa_forward_pump_power=0.1
     )
     print("ems: {}".format(res_info_dict))
 
